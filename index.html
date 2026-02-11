@@ -3,94 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Valentine's Day ❤️</title>
+<title>For Sharmila 💞</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Great+Vibes&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ff6a88, #ff99ac);
-    overflow: hidden;
-    text-align: center;
-    color: white;
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#ff6a88,#ff99ac);
+    overflow:hidden;
+    text-align:center;
+    color:white;
 }
 
-/* Pages */
-.page {
-    height: 100vh;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.page{
+    height:100vh;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    opacity:0;
+    transition:opacity 0.8s ease;
 }
 
-.active { display: flex; }
-
-/* Romantic Heading */
-.romantic-font {
-    font-family: 'Great Vibes', cursive;
-    font-size: 70px;
-    text-shadow: 0 0 15px rgba(255,255,255,0.8);
+.active{
+    display:flex;
+    opacity:1;
 }
 
-/* Subtext */
-.sub-text {
-    font-size: 20px;
-    margin-top: 10px;
+.big-font{
+    font-family:'Great Vibes',cursive;
+    font-size:75px;
+    margin:0;
 }
 
-/* Buttons */
-button {
-    padding: 12px 30px;
-    font-size: 18px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    margin: 15px;
-    transition: 0.3s;
+.question{
+    font-size:28px;
+    margin-top:10px;
 }
 
-#yesBtn {
-    background: white;
-    color: #ff4e8b;
-    font-weight: bold;
+button{
+    padding:12px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    margin:15px;
 }
 
-#noBtn {
-    position: absolute;
-    background: #ff1e56;
-    color: white;
+#yesBtn{
+    background:white;
+    color:#ff4e8b;
+    font-weight:bold;
 }
 
-/* Confetti */
-.confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    top: 0;
-    animation: fall 3s linear forwards;
+#noBtn{
+    background:#ff1e56;
+    color:white;
+    position:absolute;
 }
 
-@keyframes fall {
-    to { transform: translateY(100vh) rotate(720deg); }
+.cursor{
+    border-right:3px solid white;
+    animation:blink 0.7s infinite;
 }
 
-/* Fireworks */
-.firework {
-    position: fixed;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    animation: explode 1s ease-out forwards;
-}
-
-@keyframes explode {
-    to {
-        transform: scale(15);
-        opacity: 0;
-    }
+@keyframes blink{
+    50%{border-color:transparent;}
 }
 </style>
 </head>
@@ -99,106 +79,159 @@ button {
 
 <!-- PAGE 1 -->
 <div class="page active" id="page1">
-    <h1 id="typingText" class="romantic-font"></h1>
-    <button id="revealBtn">Tap to Reveal ❤️</button>
-    <button id="continueBtn" style="display:none;">Continue 💌</button>
+    <h1 id="introText" class="big-font"></h1>
+    <button id="continueBtn" style="display:none;">Continue 💞</button>
 </div>
 
 <!-- PAGE 2 -->
 <div class="page" id="page2">
-    <h1 class="romantic-font">Will you be my Valentine?</h1>
-    <div style="position:relative; width:100%; height:300px;">
-        <button id="yesBtn">Yes 😍</button>
+    <h1 id="nameTyping" class="big-font"></h1>
+    <div id="questionText" class="question" style="display:none;">
+        Will you be my Valentine? 💞
+    </div>
+
+    <div id="buttonsArea" style="position:relative;width:100%;height:300px;margin-top:20px;display:none;">
+        <button id="yesBtn">Yes 💖</button>
         <button id="noBtn">No 😜</button>
     </div>
 </div>
 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
-    <h1 class="romantic-font">Sharmila 💖</h1>
-    <p class="sub-text">You are my forever Valentine ✨</p>
+    <h1 class="big-font">Sharmila 💖</h1>
+    <p style="font-size:22px;margin-top:10px;">
+        You just made my world brighter and my heart happier 💕  
+        I promise to make every day special with you ✨
+    </p>
 </div>
 
 <script>
 
-/* Typing Reveal */
-const text = "Happy Valentine's Day";
-let index = 0;
+/* ---------------- AUDIO SYSTEM ---------------- */
+let audioStarted = false;
+let audioCtx;
 
-const revealBtn = document.getElementById("revealBtn");
-const typingText = document.getElementById("typingText");
-const continueBtn = document.getElementById("continueBtn");
-
-revealBtn.onclick = () => {
-    if (index < text.length) {
-        typingText.innerHTML += text[index];
-        index++;
+function initAudio(){
+    if(!audioStarted){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioStarted = true;
     }
-    if (index === text.length) {
-        revealBtn.style.display = "none";
-        continueBtn.style.display = "inline-block";
+}
+
+function typeSound(){
+    if(!audioStarted) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = 600;
+    gain.gain.value = 0.02;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+}
+
+function clickSound(){
+    if(!audioStarted) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = 300;
+    gain.gain.value = 0.05;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.08);
+}
+
+function loveChime(){
+    if(!audioStarted) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = 900;
+    gain.gain.value = 0.05;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.3);
+}
+
+/* ---------------- PAGE SWITCH ---------------- */
+function showPage(page){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    page.classList.add("active");
+}
+
+/* ---------------- PAGE 1 AUTO TYPING ---------------- */
+const intro="Happy Valentine's Day";
+let i=0;
+const introText=document.getElementById("introText");
+const continueBtn=document.getElementById("continueBtn");
+
+function typeIntro(){
+    if(i<intro.length){
+        introText.innerHTML+=intro[i];
+        typeSound();
+        i++;
+        setTimeout(typeIntro,80);
+    }else{
+        continueBtn.style.display="inline-block";
     }
+}
+typeIntro();
+
+/* ---------------- CONTINUE BUTTON ---------------- */
+continueBtn.onclick=()=>{
+    initAudio();
+    clickSound();
+    showPage(document.getElementById("page2"));
+    typeName();
 };
 
-continueBtn.onclick = () => {
-    document.getElementById("page1").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
+/* ---------------- PAGE 2 NAME TYPING ---------------- */
+const name="Sharmila";
+let n=0;
+const nameTyping=document.getElementById("nameTyping");
+const questionText=document.getElementById("questionText");
+const buttonsArea=document.getElementById("buttonsArea");
+
+function typeName(){
+    if(n<name.length){
+        nameTyping.innerHTML=name.substring(0,n+1)+'<span class="cursor"></span>';
+        typeSound();
+        n++;
+        setTimeout(typeName,150);
+    }else{
+        nameTyping.innerHTML=name;
+        questionText.style.display="block";
+        buttonsArea.style.display="block";
+    }
+}
+
+/* ---------------- YES BUTTON ---------------- */
+document.getElementById("yesBtn").onclick=()=>{
+    clickSound();
+    loveChime();
+    showPage(document.getElementById("page3"));
 };
 
-/* YES Celebration */
-document.getElementById("yesBtn").onclick = () => {
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page3").classList.add("active");
-    startConfetti();
-    startFireworks();
-};
+/* ---------------- ESCAPING NO BUTTON ---------------- */
+const noBtn=document.getElementById("noBtn");
 
-/* NO Button Smart + BIG Movement */
-let noCount = 0;
-const noBtn = document.getElementById("noBtn");
+function moveNo(){
+    const x=Math.random()*(window.innerWidth-120);
+    const y=Math.random()*(window.innerHeight-120);
+    noBtn.style.left=x+"px";
+    noBtn.style.top=y+"px";
+}
 
-noBtn.addEventListener("mouseover", () => {
-
-    noCount++;
-
-    if (noCount === 2) noBtn.innerText = "I think you're choosing wrong 😏";
-    if (noCount === 3) noBtn.innerText = "No Yes 🥺";
-    if (noCount >= 4) noBtn.innerText = "Please say Yes 🥺";
-
-    // Move anywhere on screen
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("touchstart",function(e){
+    e.preventDefault();
+    moveNo();
 });
-
-/* Confetti */
-function startConfetti() {
-    for (let i = 0; i < 120; i++) {
-        const confetti = document.createElement("div");
-        confetti.classList.add("confetti");
-        confetti.style.left = Math.random()*window.innerWidth + "px";
-        confetti.style.background = 
-            `hsl(${Math.random()*360},100%,50%)`;
-        document.body.appendChild(confetti);
-        setTimeout(()=>confetti.remove(),3000);
-    }
-}
-
-/* Fireworks */
-function startFireworks() {
-    for (let i = 0; i < 25; i++) {
-        const firework = document.createElement("div");
-        firework.classList.add("firework");
-        firework.style.left = Math.random()*window.innerWidth + "px";
-        firework.style.top = Math.random()*window.innerHeight/2 + "px";
-        firework.style.background = 
-            `hsl(${Math.random()*360},100%,50%)`;
-        document.body.appendChild(firework);
-        setTimeout(()=>firework.remove(),1000);
-    }
-}
+noBtn.addEventListener("click",function(e){
+    e.preventDefault();
+    moveNo();
+});
 
 </script>
 
