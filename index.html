@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Valentine's Day ❤️</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;500&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Great+Vibes&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 
 <style>
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3, #ff4e8b);
+    background: linear-gradient(135deg, #ff6a88, #ff99ac);
     overflow: hidden;
-    color: white;
     text-align: center;
+    color: white;
 }
 
 /* Pages */
@@ -28,22 +28,17 @@ body {
 
 .active { display: flex; }
 
-/* Glowing Anime Name */
-.anime-name {
+/* Romantic Heading */
+.romantic-font {
     font-family: 'Great Vibes', cursive;
     font-size: 70px;
-    color: #fff;
-    text-shadow: 
-        0 0 10px #fff,
-        0 0 20px #ff4e8b,
-        0 0 40px #ff1e56,
-        0 0 80px #ff1e56;
-    animation: glowPulse 2s infinite alternate;
+    text-shadow: 0 0 15px rgba(255,255,255,0.8);
 }
 
-@keyframes glowPulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
+/* Subtext */
+.sub-text {
+    font-size: 20px;
+    margin-top: 10px;
 }
 
 /* Buttons */
@@ -53,7 +48,8 @@ button {
     border-radius: 30px;
     border: none;
     cursor: pointer;
-    margin: 10px;
+    margin: 15px;
+    transition: 0.3s;
 }
 
 #yesBtn {
@@ -73,7 +69,6 @@ button {
     position: fixed;
     width: 10px;
     height: 10px;
-    background: red;
     top: 0;
     animation: fall 3s linear forwards;
 }
@@ -85,16 +80,15 @@ button {
 /* Fireworks */
 .firework {
     position: fixed;
-    width: 5px;
-    height: 5px;
-    background: yellow;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     animation: explode 1s ease-out forwards;
 }
 
 @keyframes explode {
     to {
-        transform: scale(10);
+        transform: scale(15);
         opacity: 0;
     }
 }
@@ -105,15 +99,15 @@ button {
 
 <!-- PAGE 1 -->
 <div class="page active" id="page1">
-    <h1 id="typingText"></h1>
+    <h1 id="typingText" class="romantic-font"></h1>
     <button id="revealBtn">Tap to Reveal ❤️</button>
     <button id="continueBtn" style="display:none;">Continue 💌</button>
 </div>
 
 <!-- PAGE 2 -->
 <div class="page" id="page2">
-    <h1>Will you be my Valentine? 💖</h1>
-    <div style="position:relative; width:300px; height:150px;">
+    <h1 class="romantic-font">Will you be my Valentine?</h1>
+    <div style="position:relative; width:100%; height:300px;">
         <button id="yesBtn">Yes 😍</button>
         <button id="noBtn">No 😜</button>
     </div>
@@ -121,14 +115,14 @@ button {
 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
-    <h1 class="anime-name">✨ SHARMILA ✨</h1>
-    <p>You are my forever Valentine 💖</p>
+    <h1 class="romantic-font">Sharmila 💖</h1>
+    <p class="sub-text">You are my forever Valentine ✨</p>
 </div>
 
 <script>
 
 /* Typing Reveal */
-const text = "Happy Valentine's Day ❤️";
+const text = "Happy Valentine's Day";
 let index = 0;
 
 const revealBtn = document.getElementById("revealBtn");
@@ -151,7 +145,7 @@ continueBtn.onclick = () => {
     document.getElementById("page2").classList.add("active");
 };
 
-/* YES Click Celebration */
+/* YES Celebration */
 document.getElementById("yesBtn").onclick = () => {
     document.getElementById("page2").classList.remove("active");
     document.getElementById("page3").classList.add("active");
@@ -159,183 +153,53 @@ document.getElementById("yesBtn").onclick = () => {
     startFireworks();
 };
 
-/* Smart NO */
+/* NO Button Smart + BIG Movement */
 let noCount = 0;
 const noBtn = document.getElementById("noBtn");
 
 noBtn.addEventListener("mouseover", () => {
+
     noCount++;
-    if (noCount === 2) noBtn.innerText = "Wrong button 😏";
+
+    if (noCount === 2) noBtn.innerText = "I think you're choosing wrong 😏";
     if (noCount === 3) noBtn.innerText = "No Yes 🥺";
-    if (noCount >= 4) noBtn.innerText = "Please Yes 🥺";
-    noBtn.style.left = Math.random()*250 + "px";
-    noBtn.style.top = Math.random()*120 + "px";
+    if (noCount >= 4) noBtn.innerText = "Please say Yes 🥺";
+
+    // Move anywhere on screen
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 });
 
-/* Confetti Function */
+/* Confetti */
 function startConfetti() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 120; i++) {
         const confetti = document.createElement("div");
         confetti.classList.add("confetti");
         confetti.style.left = Math.random()*window.innerWidth + "px";
         confetti.style.background = 
-            `hsl(${Math.random()*360}, 100%, 50%)`;
+            `hsl(${Math.random()*360},100%,50%)`;
         document.body.appendChild(confetti);
         setTimeout(()=>confetti.remove(),3000);
     }
 }
 
-/* Fireworks Function */
+/* Fireworks */
 function startFireworks() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 25; i++) {
         const firework = document.createElement("div");
         firework.classList.add("firework");
         firework.style.left = Math.random()*window.innerWidth + "px";
         firework.style.top = Math.random()*window.innerHeight/2 + "px";
         firework.style.background = 
-            `hsl(${Math.random()*360}, 100%, 50%)`;
+            `hsl(${Math.random()*360},100%,50%)`;
         document.body.appendChild(firework);
         setTimeout(()=>firework.remove(),1000);
     }
 }
 
-</script>
-
-</body>
-</html>
-</div>
-
-<!-- PAGE 2 -->
-<div class="page" id="page2">
-    <h1 style="font-family:'Playfair Display';">Will you be my Valentine? 💖</h1>
-    <div class="btn-container">
-        <button id="yesBtn">Yes 😍</button>
-        <button id="noBtn">No 😜</button>
-    </div>
-</div>
-
-<!-- PAGE 3 -->
-<div class="page" id="page3">
-    <div class="emoji">💖🥰💘💝</div>
-    <h1 style="font-family:'Playfair Display';">YAYYYYY!!! 🎉</h1>
-    <p>You just made my heart the happiest ❤️</p>
-</div>
-
-<script>
-
-/* Typing Reveal */
-const text = "Happy Valentine's Day ❤️";
-let index = 0;
-
-const revealBtn = document.getElementById("revealBtn");
-const typingText = document.getElementById("typingText");
-const continueBtn = document.getElementById("continueBtn");
-
-revealBtn.onclick = () => {
-    if (index < text.length) {
-        typingText.innerHTML += text[index];
-        index++;
-    }
-    if (index === text.length) {
-        revealBtn.style.display = "none";
-        continueBtn.style.display = "inline-block";
-    }
-};
-
-/* Page Switch */
-continueBtn.onclick = () => {
-    document.getElementById("page1").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
-};
-
-document.getElementById("yesBtn").onclick = () => {
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page3").classList.add("active");
-};
-
-/* Smart NO Button */
-let noCount = 0;
-const noBtn = document.getElementById("noBtn");
-
-noBtn.addEventListener("mouseover", () => {
-
-    noCount++;
-
-    if (noCount === 1) {
-        moveButton();
-    } 
-    else if (noCount === 2) {
-        noBtn.innerText = "Wrong button 😏";
-        moveButton();
-    } 
-    else if (noCount === 3) {
-        noBtn.innerText = "No Yes 🥺";
-        moveButton();
-    } 
-    else if (noCount >= 4) {
-        noBtn.innerText = "Please Yes 🥺";
-        moveButton();
-    }
-});
-
-function moveButton() {
-    const x = Math.random() * 250;
-    const y = Math.random() * 120;
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-}
-
-/* Falling Hearts */
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
-}
-setInterval(createHeart, 300);
-
-</script>
-
-</body>
-</html>
-<script>
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const page1 = document.getElementById("page1");
-const page2 = document.getElementById("page2");
-
-// Move NO button
-noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
-    noBtn.style.left = `${x}px`;
-    noBtn.style.top = `${y}px`;
-});
-
-// YES click
-yesBtn.addEventListener("click", () => {
-    page1.style.display = "none";
-    page2.style.display = "flex";
-});
-
-// Falling Hearts Generator
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 5000);
-}
-
-setInterval(createHeart, 300);
 </script>
 
 </body>
