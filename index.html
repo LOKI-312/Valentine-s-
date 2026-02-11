@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Valentine's Day ❤️</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;500&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -23,81 +24,79 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    transition: opacity 0.6s ease;
 }
 
-.active {
-    display: flex;
+.active { display: flex; }
+
+/* Glowing Anime Name */
+.anime-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 70px;
+    color: #fff;
+    text-shadow: 
+        0 0 10px #fff,
+        0 0 20px #ff4e8b,
+        0 0 40px #ff1e56,
+        0 0 80px #ff1e56;
+    animation: glowPulse 2s infinite alternate;
 }
 
-/* Luxury Heading */
-#typingText {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    text-shadow: 0 0 15px rgba(255,255,255,0.8);
-    margin-bottom: 20px;
+@keyframes glowPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
 }
 
-/* Glass Button */
+/* Buttons */
 button {
     padding: 12px 30px;
     font-size: 18px;
     border-radius: 30px;
-    border: 1px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.15);
-    color: white;
-    backdrop-filter: blur(10px);
+    border: none;
     cursor: pointer;
-    margin-top: 20px;
-    transition: all 0.3s ease;
+    margin: 10px;
 }
 
-button:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-/* Yes No layout */
-.btn-container {
-    position: relative;
-    width: 300px;
-    height: 150px;
-}
-
-/* YES */
 #yesBtn {
     background: white;
     color: #ff4e8b;
     font-weight: bold;
 }
 
-/* NO */
 #noBtn {
     position: absolute;
     background: #ff1e56;
     color: white;
 }
 
-/* Celebration */
-.emoji {
-    font-size: 60px;
-    animation: float 2s infinite alternate;
-}
-
-@keyframes float {
-    from { transform: translateY(0); }
-    to { transform: translateY(-15px); }
-}
-
-/* Falling Hearts */
-.heart {
+/* Confetti */
+.confetti {
     position: fixed;
-    top: -10px;
-    font-size: 20px;
-    animation: fall linear infinite;
+    width: 10px;
+    height: 10px;
+    background: red;
+    top: 0;
+    animation: fall 3s linear forwards;
 }
 
 @keyframes fall {
-    to { transform: translateY(100vh); }
+    to { transform: translateY(100vh) rotate(720deg); }
+}
+
+/* Fireworks */
+.firework {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    background: yellow;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    to {
+        transform: scale(10);
+        opacity: 0;
+    }
 }
 </style>
 </head>
@@ -109,6 +108,101 @@ button:hover {
     <h1 id="typingText"></h1>
     <button id="revealBtn">Tap to Reveal ❤️</button>
     <button id="continueBtn" style="display:none;">Continue 💌</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+    <h1>Will you be my Valentine? 💖</h1>
+    <div style="position:relative; width:300px; height:150px;">
+        <button id="yesBtn">Yes 😍</button>
+        <button id="noBtn">No 😜</button>
+    </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+    <h1 class="anime-name">✨ SHARMILA ✨</h1>
+    <p>You are my forever Valentine 💖</p>
+</div>
+
+<script>
+
+/* Typing Reveal */
+const text = "Happy Valentine's Day ❤️";
+let index = 0;
+
+const revealBtn = document.getElementById("revealBtn");
+const typingText = document.getElementById("typingText");
+const continueBtn = document.getElementById("continueBtn");
+
+revealBtn.onclick = () => {
+    if (index < text.length) {
+        typingText.innerHTML += text[index];
+        index++;
+    }
+    if (index === text.length) {
+        revealBtn.style.display = "none";
+        continueBtn.style.display = "inline-block";
+    }
+};
+
+continueBtn.onclick = () => {
+    document.getElementById("page1").classList.remove("active");
+    document.getElementById("page2").classList.add("active");
+};
+
+/* YES Click Celebration */
+document.getElementById("yesBtn").onclick = () => {
+    document.getElementById("page2").classList.remove("active");
+    document.getElementById("page3").classList.add("active");
+    startConfetti();
+    startFireworks();
+};
+
+/* Smart NO */
+let noCount = 0;
+const noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover", () => {
+    noCount++;
+    if (noCount === 2) noBtn.innerText = "Wrong button 😏";
+    if (noCount === 3) noBtn.innerText = "No Yes 🥺";
+    if (noCount >= 4) noBtn.innerText = "Please Yes 🥺";
+    noBtn.style.left = Math.random()*250 + "px";
+    noBtn.style.top = Math.random()*120 + "px";
+});
+
+/* Confetti Function */
+function startConfetti() {
+    for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random()*window.innerWidth + "px";
+        confetti.style.background = 
+            `hsl(${Math.random()*360}, 100%, 50%)`;
+        document.body.appendChild(confetti);
+        setTimeout(()=>confetti.remove(),3000);
+    }
+}
+
+/* Fireworks Function */
+function startFireworks() {
+    for (let i = 0; i < 20; i++) {
+        const firework = document.createElement("div");
+        firework.classList.add("firework");
+        firework.style.left = Math.random()*window.innerWidth + "px";
+        firework.style.top = Math.random()*window.innerHeight/2 + "px";
+        firework.style.background = 
+            `hsl(${Math.random()*360}, 100%, 50%)`;
+        document.body.appendChild(firework);
+        setTimeout(()=>firework.remove(),1000);
+    }
+}
+
+</script>
+
+</body>
+</html>
 </div>
 
 <!-- PAGE 2 -->
