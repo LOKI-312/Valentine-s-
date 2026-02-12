@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,22 +17,19 @@ body{
     color:white;
 }
 
-/* Pages */
 .page{
     height:100vh;
     display:none;
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    opacity:0;
     transition:opacity 1s ease;
 }
-.active{ display:flex; opacity:1; }
+.active{ display:flex; }
 
-/* Romantic font */
 .big-font{
     font-family:'Great Vibes',cursive;
-    font-size:70px;
+    font-size:65px;
 }
 
 /* Buttons */
@@ -48,7 +45,6 @@ button{
 #yesBtn{
     background:white;
     color:#ff4e8b;
-    font-weight:bold;
 }
 
 #noBtn{
@@ -57,24 +53,11 @@ button{
     position:absolute;
 }
 
-/* Heart grid */
+/* Heart */
 .heart-grid{
     font-size:22px;
     line-height:22px;
     white-space:pre;
-}
-
-/* Fade text */
-.fade-text{
-    font-size:30px;
-    margin-top:20px;
-    opacity:0;
-    animation:fadeIn 3s ease forwards;
-    animation-delay:3s;
-}
-
-@keyframes fadeIn{
-    to{opacity:1;}
 }
 
 /* Falling hearts */
@@ -103,20 +86,32 @@ button{
     }
 }
 
-/* SVG draw animation */
-svg path{
-    stroke:white;
-    stroke-width:3;
-    fill:none;
-    stroke-dasharray:500;
-    stroke-dashoffset:500;
-    animation:draw 4s forwards;
+/* Boy style */
+.boy svg{
+    width:120px;
+    height:160px;
 }
 
-@keyframes draw{
-    to{stroke-dashoffset:0;}
+.biu{
+    position:absolute;
+    left:75px;
+    top:45px;
+    font-size:14px;
+    color:#ff4e8b;
 }
 
+.small-heart{
+    position:absolute;
+    left:65px;
+    top:40px;
+    font-size:18px;
+}
+
+.message2{
+    margin-top:15px;
+    font-size:18px;
+    opacity:0.7;
+}
 </style>
 </head>
 <body>
@@ -124,24 +119,13 @@ svg path{
 <!-- PAGE 1 -->
 <div class="page active" id="page1">
     <h1 id="typeText" class="big-font"></h1>
-
-    <!-- Simple drawn boy -->
-    <svg width="120" height="160">
-        <path d="M60 20 a20 20 0 1 1 0 1"/>
-        <path d="M60 40 v50"/>
-        <path d="M60 60 l-20 20"/>
-        <path d="M60 60 l20 20"/>
-        <path d="M60 90 l-15 30"/>
-        <path d="M60 90 l15 30"/>
-    </svg>
-
-    <button onclick="goToPage2()">Continue 💞</button>
+    <button onclick="showPage('page2')">Continue 💞</button>
 </div>
 
 <!-- PAGE 2 -->
 <div class="page" id="page2">
     <h1 class="big-font">Sharmila</h1>
-    <div style="font-size:26px;">Will you be my Valentine? 💞</div>
+    <div>Will you be my Valentine? 💞</div>
 
     <div style="position:relative;width:100%;height:300px;margin-top:30px;">
         <button id="yesBtn">Yes 💖</button>
@@ -151,8 +135,28 @@ svg path{
 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
+
+    <div style="position:relative;">
+        <div class="boy">
+            <svg viewBox="0 0 100 150">
+                <circle cx="50" cy="30" r="20" stroke="black" stroke-width="3" fill="white"/>
+                <line x1="50" y1="50" x2="50" y2="95" stroke="black" stroke-width="3"/>
+                <line x1="50" y1="65" x2="25" y2="85" stroke="black" stroke-width="3"/>
+                <line x1="50" y1="65" x2="75" y2="60" stroke="black" stroke-width="3"/>
+                <line x1="50" y1="95" x2="35" y2="130" stroke="black" stroke-width="3"/>
+                <line x1="50" y1="95" x2="65" y2="130" stroke="black" stroke-width="3"/>
+            </svg>
+        </div>
+
+        <div class="small-heart">💗</div>
+        <div class="biu">biu</div>
+    </div>
+
     <div id="heartContainer" class="heart-grid"></div>
-    <div class="fade-text">I Love You Sharmila 💖</div>
+
+    <div class="big-font">I Love You Sharmila 💖</div>
+    <div class="message2">(Your special message will go here later 💌)</div>
+
 </div>
 
 <script>
@@ -163,11 +167,7 @@ function showPage(id){
     document.getElementById(id).classList.add("active");
 }
 
-function goToPage2(){
-    showPage("page2");
-}
-
-/* TYPING EFFECT PAGE 1 */
+/* TYPING PAGE 1 */
 const text="Happy Valentine's Day";
 let i=0;
 const typeText=document.getElementById("typeText");
@@ -181,15 +181,15 @@ function typeWriter(){
 }
 typeWriter();
 
-/* YES CLICK */
+/* YES */
 document.getElementById("yesBtn").onclick=function(){
     showPage("page3");
     buildHeart();
-    startFireworks();
+    fireworks();
     fallingHearts();
 };
 
-/* NO BUTTON LOOP */
+/* NO BUTTON ESCAPE (CONTINUOUS) */
 const noBtn=document.getElementById("noBtn");
 const messages=[
     "Wrong button 😏",
@@ -205,20 +205,21 @@ function moveNo(){
     noBtn.style.top=y+"px";
 }
 
-function handleNo(e){
+function escape(e){
     e.preventDefault();
     noBtn.innerText=messages[index%messages.length];
     index++;
     moveNo();
 }
 
-noBtn.addEventListener("mouseover",handleNo);
-noBtn.addEventListener("click",handleNo);
-noBtn.addEventListener("touchstart",handleNo);
+noBtn.addEventListener("mousemove",escape);
+noBtn.addEventListener("mouseover",escape);
+noBtn.addEventListener("touchstart",escape);
+noBtn.addEventListener("click",escape);
 
-/* BUILD HEART WITH EMOJIS */
+/* BUILD HEART ROW BY ROW */
 function buildHeart(){
-    const heartPattern = [
+const heartPattern=[
 "   ❤️❤️   ❤️❤️   ",
 " ❤️❤️❤️❤️❤️❤️❤️❤️ ",
 "❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️",
@@ -228,31 +229,30 @@ function buildHeart(){
 "       ❤️❤️       "
 ];
 
-    const container=document.getElementById("heartContainer");
-    container.innerHTML="";
+const container=document.getElementById("heartContainer");
+container.innerHTML="";
+let row=0;
 
-    let row=0;
-
-    function drawRow(){
-        if(row<heartPattern.length){
-            container.innerHTML+=heartPattern[row]+"\n";
-            row++;
-            setTimeout(drawRow,300);
-        }
+function drawRow(){
+    if(row<heartPattern.length){
+        container.innerHTML+=heartPattern[row]+"\n";
+        row++;
+        setTimeout(drawRow,300);
     }
-    drawRow();
+}
+drawRow();
 }
 
 /* FIREWORKS */
-function startFireworks(){
+function fireworks(){
     for(let i=0;i<20;i++){
-        const fire=document.createElement("div");
-        fire.className="firework";
-        fire.style.left=Math.random()*window.innerWidth+"px";
-        fire.style.top=Math.random()*window.innerHeight/2+"px";
-        fire.style.background=`hsl(${Math.random()*360},100%,50%)`;
-        document.body.appendChild(fire);
-        setTimeout(()=>fire.remove(),1000);
+        const f=document.createElement("div");
+        f.className="firework";
+        f.style.left=Math.random()*window.innerWidth+"px";
+        f.style.top=Math.random()*window.innerHeight/2+"px";
+        f.style.background=`hsl(${Math.random()*360},100%,50%)`;
+        document.body.appendChild(f);
+        setTimeout(()=>f.remove(),1000);
     }
 }
 
@@ -269,6 +269,5 @@ function fallingHearts(){
 }
 
 </script>
-
 </body>
 </html>
