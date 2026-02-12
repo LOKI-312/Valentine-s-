@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Sharmila 💞</title>
+<title>For Sharmila 💖</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 
@@ -27,19 +27,12 @@ body{
     opacity:0;
     transition:opacity 1s ease;
 }
-.active{
-    display:flex;
-    opacity:1;
-}
+.active{ display:flex; opacity:1; }
 
 /* Romantic font */
 .big-font{
     font-family:'Great Vibes',cursive;
-    font-size:75px;
-}
-
-.question{
-    font-size:28px;
+    font-size:70px;
 }
 
 /* Buttons */
@@ -64,50 +57,27 @@ button{
     position:absolute;
 }
 
-/* Heart Grid */
-.heart-container{
-    position:relative;
-    width:300px;
-    height:270px;
+/* Heart grid */
+.heart-grid{
+    font-size:22px;
+    line-height:22px;
+    white-space:pre;
 }
 
-.pixel-heart{
-    position:absolute;
-    width:20px;
-    height:20px;
-    background:red;
-    transform:rotate(45deg);
-    animation:pop 0.8s ease forwards;
+/* Fade text */
+.fade-text{
+    font-size:30px;
+    margin-top:20px;
     opacity:0;
+    animation:fadeIn 3s ease forwards;
+    animation-delay:3s;
 }
 
-.pixel-heart::before,
-.pixel-heart::after{
-    content:"";
-    position:absolute;
-    width:20px;
-    height:20px;
-    background:red;
-    border-radius:50%;
+@keyframes fadeIn{
+    to{opacity:1;}
 }
 
-.pixel-heart::before{
-    top:-10px;
-    left:0;
-}
-.pixel-heart::after{
-    left:-10px;
-    top:0;
-}
-
-@keyframes pop{
-    to{
-        opacity:1;
-        transform:scale(1) rotate(45deg);
-    }
-}
-
-/* Falling background hearts */
+/* Falling hearts */
 .fall-heart{
     position:fixed;
     top:-20px;
@@ -133,16 +103,18 @@ button{
     }
 }
 
-.fade-text{
-    font-size:28px;
-    margin-top:20px;
-    opacity:0;
-    animation:fadeIn 3s ease forwards;
-    animation-delay:2s;
+/* SVG draw animation */
+svg path{
+    stroke:white;
+    stroke-width:3;
+    fill:none;
+    stroke-dasharray:500;
+    stroke-dashoffset:500;
+    animation:draw 4s forwards;
 }
 
-@keyframes fadeIn{
-    to{opacity:1;}
+@keyframes draw{
+    to{stroke-dashoffset:0;}
 }
 
 </style>
@@ -151,14 +123,26 @@ button{
 
 <!-- PAGE 1 -->
 <div class="page active" id="page1">
-    <h1 class="big-font">Happy Valentine's Day</h1>
+    <h1 id="typeText" class="big-font"></h1>
+
+    <!-- Simple drawn boy -->
+    <svg width="120" height="160">
+        <path d="M60 20 a20 20 0 1 1 0 1"/>
+        <path d="M60 40 v50"/>
+        <path d="M60 60 l-20 20"/>
+        <path d="M60 60 l20 20"/>
+        <path d="M60 90 l-15 30"/>
+        <path d="M60 90 l15 30"/>
+    </svg>
+
     <button onclick="goToPage2()">Continue 💞</button>
 </div>
 
 <!-- PAGE 2 -->
 <div class="page" id="page2">
     <h1 class="big-font">Sharmila</h1>
-    <div class="question">Will you be my Valentine? 💞</div>
+    <div style="font-size:26px;">Will you be my Valentine? 💞</div>
+
     <div style="position:relative;width:100%;height:300px;margin-top:30px;">
         <button id="yesBtn">Yes 💖</button>
         <button id="noBtn">No 😜</button>
@@ -167,8 +151,8 @@ button{
 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
-    <div class="heart-container" id="heartContainer"></div>
-    <div class="fade-text">I Love You Too Sharmila 💖</div>
+    <div id="heartContainer" class="heart-grid"></div>
+    <div class="fade-text">I Love You Sharmila 💖</div>
 </div>
 
 <script>
@@ -183,10 +167,24 @@ function goToPage2(){
     showPage("page2");
 }
 
+/* TYPING EFFECT PAGE 1 */
+const text="Happy Valentine's Day";
+let i=0;
+const typeText=document.getElementById("typeText");
+
+function typeWriter(){
+    if(i<text.length){
+        typeText.innerHTML+=text[i];
+        i++;
+        setTimeout(typeWriter,120);
+    }
+}
+typeWriter();
+
 /* YES CLICK */
 document.getElementById("yesBtn").onclick=function(){
     showPage("page3");
-    createHeartShape();
+    buildHeart();
     startFireworks();
     fallingHearts();
 };
@@ -218,201 +216,31 @@ noBtn.addEventListener("mouseover",handleNo);
 noBtn.addEventListener("click",handleNo);
 noBtn.addEventListener("touchstart",handleNo);
 
-/* HEART SHAPE GRID */
-function createHeartShape(){
-    const container=document.getElementById("heartContainer");
-    const shape=[
-        "00111100",
-        "01111110",
-        "11111111",
-        "11111111",
-        "01111110",
-        "00111100",
-        "00011000",
-        "00001000"
-    ];
-    const size=25;
-
-    shape.forEach((row,y)=>{
-        row.split("").forEach((col,x)=>{
-            if(col==="1"){
-                const heart=document.createElement("div");
-                heart.className="pixel-heart";
-                heart.style.left=x*size+"px";
-                heart.style.top=y*size+"px";
-                heart.style.animationDelay=(x+y)*0.05+"s";
-                container.appendChild(heart);
-            }
-        });
-    });
-}
-
-/* FIREWORKS */
-function startFireworks(){
-    for(let i=0;i<20;i++){
-        const fire=document.createElement("div");
-        fire.className="firework";
-        fire.style.left=Math.random()*window.innerWidth+"px";
-        fire.style.top=Math.random()*window.innerHeight/2+"px";
-        fire.style.background=`hsl(${Math.random()*360},100%,50%)`;
-        document.body.appendChild(fire);
-        setTimeout(()=>fire.remove(),1000);
-    }
-}
-
-/* FALLING HEARTS */
-function fallingHearts(){
-    setInterval(()=>{
-        const h=document.createElement("div");
-        h.className="fall-heart";
-        h.innerHTML="💖";
-        h.style.left=Math.random()*window.innerWidth+"px";
-        h.style.animationDuration=(3+Math.random()*2)+"s";
-        document.body.appendChild(h);
-        setTimeout(()=>h.remove(),5000);
-    },300);
-}
-
-</script>
-
-</body>
-</html>
-    position:fixed;
-    top:-20px;
-    font-size:20px;
-    animation:fall 4s linear infinite;
-}
-@keyframes fall{
-    to{transform:translateY(110vh);}
-}
-
-/* Fireworks */
-.firework{
-    position:fixed;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    animation:explode 1s ease-out forwards;
-}
-@keyframes explode{
-    to{
-        transform:scale(15);
-        opacity:0;
-    }
-}
-
-.fade-text{
-    font-size:28px;
-    margin-top:20px;
-    opacity:0;
-    animation:fadeIn 3s ease forwards;
-    animation-delay:2s;
-}
-
-@keyframes fadeIn{
-    to{opacity:1;}
-}
-
-</style>
-</head>
-<body>
-
-<!-- PAGE 1 -->
-<div class="page active" id="page1">
-    <h1 class="big-font">Happy Valentine's Day</h1>
-    <button onclick="goToPage2()">Continue 💞</button>
-</div>
-
-<!-- PAGE 2 -->
-<div class="page" id="page2">
-    <h1 class="big-font">Sharmila</h1>
-    <div class="question">Will you be my Valentine? 💞</div>
-    <div style="position:relative;width:100%;height:300px;margin-top:30px;">
-        <button id="yesBtn">Yes 💖</button>
-        <button id="noBtn">No 😜</button>
-    </div>
-</div>
-
-<!-- PAGE 3 -->
-<div class="page" id="page3">
-    <div class="heart-container" id="heartContainer"></div>
-    <div class="fade-text">I Love You Too Sharmila 💖</div>
-</div>
-
-<script>
-
-/* PAGE SWITCH */
-function showPage(id){
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-
-function goToPage2(){
-    showPage("page2");
-}
-
-/* YES CLICK */
-document.getElementById("yesBtn").onclick=function(){
-    showPage("page3");
-    createHeartShape();
-    startFireworks();
-    fallingHearts();
-};
-
-/* NO BUTTON LOOP */
-const noBtn=document.getElementById("noBtn");
-const messages=[
-    "Wrong button 😏",
-    "Try Yes 💖",
-    "Please Yes 🥺"
+/* BUILD HEART WITH EMOJIS */
+function buildHeart(){
+    const heartPattern = [
+"   ❤️❤️   ❤️❤️   ",
+" ❤️❤️❤️❤️❤️❤️❤️❤️ ",
+"❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️",
+" ❤️❤️❤️❤️❤️❤️❤️❤️ ",
+"   ❤️❤️❤️❤️❤️❤️   ",
+"     ❤️❤️❤️❤️     ",
+"       ❤️❤️       "
 ];
-let index=0;
 
-function moveNo(){
-    const x=Math.random()*(window.innerWidth-120);
-    const y=Math.random()*(window.innerHeight-120);
-    noBtn.style.left=x+"px";
-    noBtn.style.top=y+"px";
-}
-
-function handleNo(e){
-    e.preventDefault();
-    noBtn.innerText=messages[index%messages.length];
-    index++;
-    moveNo();
-}
-
-noBtn.addEventListener("mouseover",handleNo);
-noBtn.addEventListener("click",handleNo);
-noBtn.addEventListener("touchstart",handleNo);
-
-/* HEART SHAPE GRID */
-function createHeartShape(){
     const container=document.getElementById("heartContainer");
-    const shape=[
-        "00111100",
-        "01111110",
-        "11111111",
-        "11111111",
-        "01111110",
-        "00111100",
-        "00011000",
-        "00001000"
-    ];
-    const size=25;
+    container.innerHTML="";
 
-    shape.forEach((row,y)=>{
-        row.split("").forEach((col,x)=>{
-            if(col==="1"){
-                const heart=document.createElement("div");
-                heart.className="pixel-heart";
-                heart.style.left=x*size+"px";
-                heart.style.top=y*size+"px";
-                heart.style.animationDelay=(x+y)*0.05+"s";
-                container.appendChild(heart);
-            }
-        });
-    });
+    let row=0;
+
+    function drawRow(){
+        if(row<heartPattern.length){
+            container.innerHTML+=heartPattern[row]+"\n";
+            row++;
+            setTimeout(drawRow,300);
+        }
+    }
+    drawRow();
 }
 
 /* FIREWORKS */
@@ -435,7 +263,6 @@ function fallingHearts(){
         h.className="fall-heart";
         h.innerHTML="💖";
         h.style.left=Math.random()*window.innerWidth+"px";
-        h.style.animationDuration=(3+Math.random()*2)+"s";
         document.body.appendChild(h);
         setTimeout(()=>h.remove(),5000);
     },300);
