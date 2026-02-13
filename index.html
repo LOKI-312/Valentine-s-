@@ -476,24 +476,32 @@ function sendHeartAnimation(){
     // Reset animations
     arm.style.animation = "none";
     flyingHeart.style.animation = "none";
+    bigHeart.style.animation = "none";
     void arm.offsetWidth; // restart trick
 
-    // Animate arm
+    // Arm move
     arm.style.transformOrigin = "50px 65px";
     arm.style.animation = "sendArm 0.8s ease";
 
-    // Animate flying heart
+    // Flying heart
     flyingHeart.style.opacity = "1";
     flyingHeart.style.animation = "flyHeart 0.8s ease forwards";
 
-    // After heart reaches
+    // After heart reaches big heart
     setTimeout(()=>{
         flyingHeart.style.opacity = "0";
 
-        // ONE strong beat only
+        // Big heart beat once
         bigHeart.style.animation = "strongBeatOnce 0.6s ease";
 
+        // AFTER beat finishes → shoot again
+        setTimeout(()=>{
+            sendHeartAnimation();
+        },600);
+
     },800);
+}
+    
 }
     for(let i=0;i<60;i++){
         const star=document.createElement("div");
