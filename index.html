@@ -112,6 +112,68 @@ button{
     font-size:18px;
     opacity:0.7;
 }
+    /* NIGHT MODE */
+.night{
+    background: radial-gradient(circle at top,#1a1a2e,#0f3460,#000000);
+    transition: background 2s ease;
+}
+
+/* Stars */
+.star{
+    position:fixed;
+    width:2px;
+    height:2px;
+    background:white;
+    animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+    from{opacity:0.2;}
+    to{opacity:1;}
+}
+
+/* Heart grow + beat */
+.heart-grid{
+    font-size:10px;
+    transform:scale(0);
+    animation: grow 2s forwards, beat 1s infinite 2s;
+}
+@keyframes grow{
+    to{transform:scale(1);}
+}
+@keyframes beat{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+}
+
+/* Boy arm animation */
+.arm{
+    animation: armMove 1.5s ease forwards;
+}
+@keyframes armMove{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(-20deg);}
+}
+
+/* Love letter popup */
+.popup{
+    position:fixed;
+    bottom:-100%;
+    left:50%;
+    transform:translateX(-50%);
+    width:80%;
+    background:white;
+    color:#ff4e8b;
+    padding:20px;
+    border-radius:20px;
+    font-family:'Great Vibes',cursive;
+    font-size:24px;
+    transition:bottom 1s ease;
+    z-index:999;
+}
+.popup.show{
+    bottom:20%;
+}
+    
 </style>
 </head>
 <body>
@@ -142,7 +204,7 @@ button{
                 <circle cx="50" cy="30" r="20" stroke="black" stroke-width="3" fill="white"/>
                 <line x1="50" y1="50" x2="50" y2="95" stroke="black" stroke-width="3"/>
                 <line x1="50" y1="65" x2="25" y2="85" stroke="black" stroke-width="3"/>
-                <line x1="50" y1="65" x2="75" y2="60" stroke="black" stroke-width="3"/>
+                <line class="arm" x1="50" y1="65" x2="75" y2="60" stroke="black" stroke-width="3"/>
                 <line x1="50" y1="95" x2="35" y2="130" stroke="black" stroke-width="3"/>
                 <line x1="50" y1="95" x2="65" y2="130" stroke="black" stroke-width="3"/>
             </svg>
@@ -207,13 +269,21 @@ function typeWriter(){
 }
 typeWriter();
 
-/* YES */
 document.getElementById("yesBtn").onclick=function(){
     showPage("page3");
+
+    document.body.classList.add("night");
+
     buildHeart();
     fireworks();
     fallingHearts();
+    createStars();
+
+    setTimeout(()=>{
+        document.getElementById("lovePopup").classList.add("show");
+    },6000);
 };
+
 
 /* ---------- FIXED NO BUTTON ESCAPE ---------- */
 
@@ -320,7 +390,21 @@ function fallingHearts(){
         setTimeout(()=>h.remove(),5000);
     },300);
 }
-
+    
+function createStars(){
+    for(let i=0;i<60;i++){
+        const star=document.createElement("div");
+        star.className="star";
+        star.style.left=Math.random()*window.innerWidth+"px";
+        star.style.top=Math.random()*window.innerHeight+"px";
+        document.body.appendChild(star);
+    }
+}
+    
 </script>
+    <div id="lovePopup" class="popup">
+You are my peace, my happiness, my forever 💖
+    </div>
+    
 </body>
 </html>
