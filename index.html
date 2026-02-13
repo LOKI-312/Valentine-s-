@@ -59,7 +59,7 @@ button{
     line-height:22px;
     white-space:pre;
     transform:scale(0);
-    animation: grow 2s forwards, beat 1.2s infinite 2s;
+    animation: grow 1.5s forwards;
     margin-top:20px;
 }
 
@@ -203,6 +203,12 @@ button{
 @keyframes strongBeat {
     0%,100%{ transform:scale(1); }
     50%{ transform:scale(1.2); }
+}
+
+@keyframes strongBeatOnce{
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.25); }
+    100%{ transform:scale(1); }
 }
     
 </style>
@@ -403,10 +409,11 @@ document.addEventListener("mousemove", function(e){
 
 /* BUILD HEART ROW BY ROW */
 function buildHeart(){
+
 const heartPattern=[
 "   ❤️❤️   ❤️❤️   ",
 " ❤️❤️❤️❤️❤️❤️❤️❤️ ",
-"❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️",
+"❤️❤️❤️❤️❤️❤️❤️❤️❤️",
 " ❤️❤️❤️❤️❤️❤️❤️❤️ ",
 "   ❤️❤️❤️❤️❤️❤️   ",
 "     ❤️❤️❤️❤️     ",
@@ -422,8 +429,14 @@ function drawRow(){
         container.innerHTML+=heartPattern[row]+"\n";
         row++;
         setTimeout(drawRow,300);
+    } else {
+        // HEART COMPLETED
+        setTimeout(()=>{
+            sendHeartAnimation();
+        },500);
     }
 }
+
 drawRow();
 }
 
@@ -439,24 +452,6 @@ function fireworks(){
         setTimeout(()=>f.remove(),1000);
     }
 }
-    function sendHeartAnimation(){
-
-    const arm = document.getElementById("armLine");
-    const flyingHeart = document.getElementById("shootHeart");
-    const bigHeart = document.getElementById("heartContainer");
-
-    // Animate arm
-    arm.style.transformOrigin = "50px 65px";
-    arm.style.animation = "sendArm 1s ease";
-
-    // Animate flying heart
-    flyingHeart.style.animation = "flyHeart 1s ease forwards";
-
-    // After heart reaches big heart
-    setTimeout(()=>{
-        bigHeart.classList.add("beat-active");
-    },1000);
-    }
     
 
 /* FALLING HEARTS */
@@ -472,6 +467,34 @@ function fallingHearts(){
 }
     
 function createStars(){
+function sendHeartAnimation(){
+
+    const arm = document.getElementById("armLine");
+    const flyingHeart = document.getElementById("shootHeart");
+    const bigHeart = document.getElementById("heartContainer");
+
+    // Reset animations
+    arm.style.animation = "none";
+    flyingHeart.style.animation = "none";
+    void arm.offsetWidth; // restart trick
+
+    // Animate arm
+    arm.style.transformOrigin = "50px 65px";
+    arm.style.animation = "sendArm 0.8s ease";
+
+    // Animate flying heart
+    flyingHeart.style.opacity = "1";
+    flyingHeart.style.animation = "flyHeart 0.8s ease forwards";
+
+    // After heart reaches
+    setTimeout(()=>{
+        flyingHeart.style.opacity = "0";
+
+        // ONE strong beat only
+        bigHeart.style.animation = "strongBeatOnce 0.6s ease";
+
+    },800);
+}
     for(let i=0;i<60;i++){
         const star=document.createElement("div");
         star.className="star";
