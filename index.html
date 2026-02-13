@@ -467,42 +467,45 @@ function fallingHearts(){
 }
     
 function createStars(){
+    for(let i=0;i<60;i++){
+        const star=document.createElement("div");
+        star.className="star";
+        star.style.left=Math.random()*window.innerWidth+"px";
+        star.style.top=Math.random()*window.innerHeight+"px";
+        document.body.appendChild(star);
+    }
+}
+    
 function sendHeartAnimation(){
 
     const arm = document.getElementById("armLine");
     const flyingHeart = document.getElementById("shootHeart");
     const bigHeart = document.getElementById("heartContainer");
 
-    // Reset animations
     arm.style.animation = "none";
     flyingHeart.style.animation = "none";
     bigHeart.style.animation = "none";
-    void arm.offsetWidth; // restart trick
+    void arm.offsetWidth;
 
-    // Arm move
     arm.style.transformOrigin = "50px 65px";
     arm.style.animation = "sendArm 0.8s ease";
 
-    // Flying heart
     flyingHeart.style.opacity = "1";
     flyingHeart.style.animation = "flyHeart 0.8s ease forwards";
 
-    // After heart reaches big heart
     setTimeout(()=>{
         flyingHeart.style.opacity = "0";
-
-        // Big heart beat once
         bigHeart.style.animation = "strongBeatOnce 0.6s ease";
 
-        // AFTER beat finishes → shoot again
         setTimeout(()=>{
             sendHeartAnimation();
         },600);
 
     },800);
 }
+
+
     
-}
     for(let i=0;i<60;i++){
         const star=document.createElement("div");
         star.className="star";
