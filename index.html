@@ -346,10 +346,7 @@ document.getElementById("yesBtn").onclick=function(){
     fireworks();
     fallingHearts();
     createStars();
-
-    setTimeout(sendHeartAnimation,1500);
 };
-
 
 
 /* ---------- FIXED NO BUTTON ESCAPE ---------- */
@@ -502,17 +499,6 @@ function sendHeartAnimation(){
         },600);
 
     },800);
-}
-
-
-    
-    for(let i=0;i<60;i++){
-        const star=document.createElement("div");
-        star.className="star";
-        star.style.left=Math.random()*window.innerWidth+"px";
-        star.style.top=Math.random()*window.innerHeight+"px";
-        document.body.appendChild(star);
-    }
 }
     
 </script>
