@@ -176,6 +176,34 @@ button{
 .popup.show{
     bottom:20%;
 }
+    /* Arm send animation */
+@keyframes sendArm {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-25deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* Heart flying animation */
+@keyframes flyHeart {
+    0% {
+        transform: translate(0,0);
+        opacity:1;
+    }
+    100% {
+        transform: translate(250px,20px);
+        opacity:0;
+    }
+}
+
+/* Big heart beat stronger */
+.beat-active {
+    animation: grow 1.5s forwards, strongBeat 0.8s infinite 1.5s;
+}
+
+@keyframes strongBeat {
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.2); }
+}
     
 </style>
 </head>
@@ -201,26 +229,43 @@ button{
 <!-- PAGE 3 -->
 <div class="page" id="page3">
 
-    <div style="position:relative;">
-        <div class="boy">
-            <svg viewBox="0 0 100 150">
-                <circle cx="50" cy="30" r="20" stroke="black" stroke-width="3" fill="white"/>
-                <line x1="50" y1="50" x2="50" y2="95" stroke="black" stroke-width="3"/>
-                <line x1="50" y1="65" x2="25" y2="85" stroke="black" stroke-width="3"/>
-                <line class="arm" x1="50" y1="65" x2="75" y2="60" stroke="black" stroke-width="3"/>
-                <line x1="50" y1="95" x2="35" y2="130" stroke="black" stroke-width="3"/>
-                <line x1="50" y1="95" x2="65" y2="130" stroke="black" stroke-width="3"/>
-            </svg>
-        </div>
+<div style="display:flex; align-items:center; justify-content:center; gap:60px; flex-wrap:wrap;">
 
-        <div class="small-heart">💗</div>
-        <div class="biu">biu</div>
+    <!-- BOY LEFT -->
+    <div style="position:relative;">
+        <svg viewBox="0 0 100 150" width="120" height="160">
+            <circle cx="50" cy="30" r="20" stroke="white" stroke-width="3" fill="none"/>
+            <line x1="50" y1="50" x2="50" y2="95" stroke="white" stroke-width="3"/>
+            <line x1="50" y1="65" x2="25" y2="85" stroke="white" stroke-width="3"/>
+
+            <!-- Moving Arm -->
+            <line id="armLine" x1="50" y1="65" x2="75" y2="60"
+                  stroke="white" stroke-width="3"/>
+
+            <line x1="50" y1="95" x2="35" y2="130" stroke="white" stroke-width="3"/>
+            <line x1="50" y1="95" x2="65" y2="130" stroke="white" stroke-width="3"/>
+        </svg>
+
+        <!-- Shooting Heart -->
+        <div id="shootHeart" style="
+            position:absolute;
+            left:70px;
+            top:50px;
+            font-size:20px;
+            opacity:0;
+        ">💗</div>
     </div>
 
-    <div id="heartContainer" class="heart-grid"></div>
-    
-    <div class="big-font" style="
+    <!-- BIG HEART RIGHT -->
+    <div>
+        <div id="heartContainer" class="heart-grid"></div>
+    </div>
+
+</div>
+
+<div class="big-font" style="
 font-size:75px;
+margin-top:30px;
 text-shadow:0 0 10px #ff6a88,
             0 0 20px #ff4e8b,
             0 0 40px #ff1e56;">
@@ -289,7 +334,6 @@ typeWriter();
 
 document.getElementById("yesBtn").onclick=function(){
     showPage("page3");
-
     document.body.classList.add("night");
 
     buildHeart();
@@ -297,10 +341,9 @@ document.getElementById("yesBtn").onclick=function(){
     fallingHearts();
     createStars();
 
-    setTimeout(()=>{
-        document.getElementById("lovePopup").classList.add("show");
-    },6000);
+    setTimeout(sendHeartAnimation,1500);
 };
+
 
 
 /* ---------- FIXED NO BUTTON ESCAPE ---------- */
@@ -396,6 +439,25 @@ function fireworks(){
         setTimeout(()=>f.remove(),1000);
     }
 }
+    function sendHeartAnimation(){
+
+    const arm = document.getElementById("armLine");
+    const flyingHeart = document.getElementById("shootHeart");
+    const bigHeart = document.getElementById("heartContainer");
+
+    // Animate arm
+    arm.style.transformOrigin = "50px 65px";
+    arm.style.animation = "sendArm 1s ease";
+
+    // Animate flying heart
+    flyingHeart.style.animation = "flyHeart 1s ease forwards";
+
+    // After heart reaches big heart
+    setTimeout(()=>{
+        bigHeart.classList.add("beat-active");
+    },1000);
+    }
+    
 
 /* FALLING HEARTS */
 function fallingHearts(){
