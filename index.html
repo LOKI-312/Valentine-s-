@@ -189,33 +189,60 @@ document.getElementById("yesBtn").onclick=function(){
     fallingHearts();
 };
 
-/* NO BUTTON ESCAPE (CONTINUOUS) */
-const noBtn=document.getElementById("noBtn");
-const messages=[
+/* ---------- FIXED NO BUTTON ESCAPE ---------- */
+
+const noBtn = document.getElementById("noBtn");
+
+const messages = [
     "Wrong button 😏",
     "Try Yes 💖",
     "Please Yes 🥺"
 ];
-let index=0;
+
+let index = 0;
 
 function moveNo(){
-    const x=Math.random()*(window.innerWidth-120);
-    const y=Math.random()*(window.innerHeight-120);
-    noBtn.style.left=x+"px";
-    noBtn.style.top=y+"px";
+    const padding = 20;
+
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.position = "fixed";   // key fix
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 }
 
 function escape(e){
     e.preventDefault();
-    noBtn.innerText=messages[index%messages.length];
+    noBtn.innerText = messages[index % messages.length];
     index++;
     moveNo();
 }
 
-noBtn.addEventListener("mousemove",escape);
-noBtn.addEventListener("mouseover",escape);
-noBtn.addEventListener("touchstart",escape);
-noBtn.addEventListener("click",escape);
+noBtn.addEventListener("mouseenter", escape);
+noBtn.addEventListener("touchstart", function(e){
+    e.preventDefault();
+    escape(e);
+});
+noBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    escape(e);
+});
+
+/* Extra: jump if cursor gets near */
+document.addEventListener("mousemove", function(e){
+    const rect = noBtn.getBoundingClientRect();
+    const dx = Math.abs(e.clientX - (rect.left + rect.width/2));
+    const dy = Math.abs(e.clientY - (rect.top + rect.height/2));
+
+    if(dx < 80 && dy < 50){
+        escape(e);
+    }
+});
+
 
 /* BUILD HEART ROW BY ROW */
 function buildHeart(){
